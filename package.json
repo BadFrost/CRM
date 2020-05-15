@@ -1,0 +1,53 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "repository": "https://github.com/BadFrost/CRM.git",
+  "dependencies": {
+    "@react-native-community/masked-view": "0.1.6",
+    "@react-native-community/picker": "^1.3.0",
+    "@react-navigation/native": "^5.2.4",
+    "@react-navigation/stack": "^5.2.19",
+    "@use-expo/font": "^2.0.0",
+    "expo": "~37.0.3",
+    "expo-font": "^8.1.1",
+    "moment": "^2.25.3",
+    "mongodb": "^3.5.7",
+    "react": "^16.13.1",
+    "react-dom": "~16.9.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
+    "react-native-calendar-picker": "^6.1.1",
+    "react-native-calendar-strip": "^1.4.2",
+    "react-native-calendars": "^1.265.0",
+    "react-native-custom-picker": "^0.4.0",
+    "react-native-drop-down-item": "^1.1.0",
+    "react-native-dropdown": "^0.0.6",
+    "react-native-dropdown-menu": "^2.0.0",
+    "react-native-elements": "^2.0.0",
+    "react-native-fs": "^2.16.6",
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-material-dropdown": "^0.11.1",
+    "react-native-picker-select": "^7.0.0",
+    "react-native-safe-area-context": "^0.7.3",
+    "react-native-screens": "~2.2.0",
+    "react-native-slideable-calendar-strip": "^0.4.0",
+    "react-native-vector-icons": "^6.6.0",
+    "react-native-web": "~0.11.7",
+    "redux-persist-filesystem-storage": "^2.1.0",
+    "rn-fetch-blob": "^0.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "babel-preset-expo": "~8.1.0"
+  },
+  "private": true,
+  "name": "CRM",
+  "version": "1.0.0",
+  "author": "BadFrost <terminator6301@gmail.com>",
+  "license": "MIT"
+}
