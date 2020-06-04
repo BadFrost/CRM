@@ -1,8 +1,12 @@
 import * as React from 'react';
 import { useState } from 'react'
-import { Image, TextInput, StyleSheet, Text, TouchableOpacity, View, AsyncStorage } from 'react-native';
+import { Image, TextInput, StyleSheet, Text, TouchableOpacity, View, Modal, ScrollView } from 'react-native';
+import Constants from "expo-constants";
+import axios from 'axios';
 
 export function Register({ navigation }) {
+  const { manifest } = Constants;
+  const [modalVisible, setModalVisible] = useState(false);
   const [countryAndCode, setCountry] = useState({country: '', code: ''});
   const [fname, setFname] = useState({fname: ''});
   const [lname, setLname] = useState({lname: ''});
@@ -50,119 +54,152 @@ export function Register({ navigation }) {
   let registerHandler = async () => {
     if (passConfirmed === true) {
       if (fname.fname !== '' && lname.lname !== '' && email.email !== '' && phone.phone !== '' && countryAndCode.country !== '' && company.company !== '') {
-        try {
-          await AsyncStorage.setItem(
-            email.email,
-            JSON.stringify({
-              fname: fname.fname,
-              lname: lname.lname,
-              email: email.email,
-              pass: pass.pass,
-              phone: phone.phone,
-              country: countryAndCode.country,
-              company: company.company
-            })
-          );
-          navigation.navigate('Login')
-        } catch (error) {
-          console.log(error)
-        }
+        const uri = `${manifest.debuggerHost.split(':').shift()}`;
+        axios.post(`http://${uri}:8080/register`, {
+          fname: fname.fname,
+          lname: lname.lname,
+          email: email.email,
+          pass: pass.pass,
+          phone: phone.phone,
+          country: countryAndCode.country,
+          company: company.company
+        })
+        .then(async (res) => {
+          console.log(res)
+          if (res.data === 'OK') {
+            navigation.navigate('Login')
+          }
+          else if (res.data === 'User already exists!') {
+            setModalVisible(true)
+            setEmail({email: ''})
+          };
+        })
+        .catch(async (err) => {
+          console.log(err)
+        });
       }
     }
   };
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={require('../assets/icons/Logo.png')}  
-      />
-      <Text style={styles.welcome}>Welcome!</Text>
-      {/* Fname */}
-      <View style={styles.inputName}>
-        <TextInput
-          style={styles.inputTextName}
-          placeholder="Enter your name" 
-          placeholderTextColor='rgba(255, 255, 255, 0.4)'
-          onChangeText={fname => setFname({fname: fname})}/>
-      </View>
-      {/* Lname */}
-      <View style={styles.inputSurname}>
-        <TextInput
-          style={styles.inputTextSurname}
-          placeholder="Enter your surname"
-          placeholderTextColor='rgba(255, 255, 255, 0.4)'
-          onChangeText={lname => setLname({lname: lname})}/>
-      </View>
-      {/* Country */}
-      <View style={styles.inputCountry}>
-        <TextInput
-          style={styles.inputTextCountry}
-          placeholder="Enter your country" 
-          placeholderTextColor='rgba(255, 255, 255, 0.4)'
-          onChangeText={country => setCountryHandler(country)}/>
-      </View>
-      {/* Phone code */}
-      <View style={styles.inputCode}>
-        <TextInput
-          style={styles.inputTextCode}
-          value={countryAndCode.code}/>
-      </View>
-      {/* Company */}
-      <View style={styles.inputCompany}>
-        <TextInput
-          style={styles.inputTextCompany}
-          placeholder="Enter who you are" 
-          placeholderTextColor='rgba(255, 255, 255, 0.4)'
-          onChangeText={company => companyHandler(company)}/>
-      </View>
-      {/* Phone */}
-      <View style={styles.inputPhone}>
-        <TextInput
-          style={styles.inputTextPhone}
-          placeholder="Enter your number" 
-          placeholderTextColor='rgba(255, 255, 255, 0.4)'
-          onChangeText={phone => setPhone({phone: `${countryAndCode.code}${phone}`})}/>
-      </View>
-      {/* Email */}
-      <View style={styles.inputEmail}>
-        <TextInput  
-          style={styles.inputTextEmail}
-          placeholder="Enter your E-mail"
-          placeholderTextColor='rgba(255, 255, 255, 0.4)'
-          onChangeText={email => setEmail({email: email})}/>
-      </View>
-      {/* Pass */}
-      <View style={styles.inputPassword}>
-        <TextInput  
-          secureTextEntry
-          style={styles.inputTextPassword}
-          placeholder="Enter your password" 
-          placeholderTextColor='rgba(255, 255, 255, 0.4)'
-          onChangeText={pass => setPass({pass: pass})}/>
-      </View>
-      {/* Confirm pass */}
-      <View style={styles.inputConfirmPassword}>
-        <TextInput  
-          secureTextEntry
-          style={styles.inputConfirmTextPassword}
-          placeholder="Confirm your password" 
-          placeholderTextColor='rgba(255, 255, 255, 0.4)'
-          onChangeText={confirmedPass => passHandler(confirmedPass)}/>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.loginTouch}>
-        <Text style={styles.loginText}>I have got my profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        style={styles.registerBtn}
-        onPress={() => registerHandler()}>
-        <Text style={styles.registerText}>Registration</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.supportBtn}>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.modalView}>
+            <Text style={styles.errorText}>Email already exists!</Text>
+
+            <TouchableOpacity
+              style={styles.okButton}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <Text style={styles.ok}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
         <Image
-          source={require('../assets/icons/IconSupport1.png')}  
+          style={styles.logo}
+          source={require('../assets/icons/Logo.png')}  
         />
-      </TouchableOpacity>
+        <Text style={styles.welcome}>Welcome!</Text>
+        {/* Fname */}
+        <View style={styles.inputName}>
+          <TextInput
+            style={styles.inputTextName}
+            placeholder="Enter your name" 
+            placeholderTextColor='rgba(255, 255, 255, 0.4)'
+            onChangeText={fname => setFname({fname: fname})}
+            value={fname.fname}/>
+        </View>
+        {/* Lname */}
+        <View style={styles.inputSurname}>
+          <TextInput
+            style={styles.inputTextSurname}
+            placeholder="Enter your surname"
+            placeholderTextColor='rgba(255, 255, 255, 0.4)'
+            onChangeText={lname => setLname({lname: lname})}
+            value={lname.lname}/>
+        </View>
+        {/* Country */}
+        <View style={styles.inputCountry}>
+          <TextInput
+            style={styles.inputTextCountry}
+            placeholder="Enter your country" 
+            placeholderTextColor='rgba(255, 255, 255, 0.4)'
+            onChangeText={country => setCountryHandler(country)}/>
+        </View>
+        {/* Phone code */}
+        <View style={styles.inputCode}>
+          <TextInput
+            style={styles.inputTextCode}
+            value={countryAndCode.code}/>
+        </View>
+        {/* Company */}
+        <View style={styles.inputCompany}>
+          <TextInput
+            style={styles.inputTextCompany}
+            placeholder="Enter who you are" 
+            placeholderTextColor='rgba(255, 255, 255, 0.4)'
+            onChangeText={company => companyHandler(company)}/>
+        </View>
+        {/* Phone */}
+        <View style={styles.inputPhone}>
+          <TextInput
+            style={styles.inputTextPhone}
+            placeholder="Enter your number" 
+            placeholderTextColor='rgba(255, 255, 255, 0.4)'
+            onChangeText={phone => setPhone({phone: `${countryAndCode.code}${phone}`})}/>
+        </View>
+        {/* Email */}
+        <View style={styles.inputEmail}>
+          <TextInput  
+            style={styles.inputTextEmail}
+            placeholder="Enter your E-mail"
+            placeholderTextColor='rgba(255, 255, 255, 0.4)'
+            onChangeText={email => setEmail({email: email})}
+            value={email.email}/>
+        </View>
+        {/* Pass */}
+        <View style={styles.inputPassword}>
+          <TextInput  
+            secureTextEntry
+            style={styles.inputTextPassword}
+            placeholder="Enter your password" 
+            placeholderTextColor='rgba(255, 255, 255, 0.4)'
+            onChangeText={pass => setPass({pass: pass})}
+            value={pass.pass}/>
+        </View>
+        {/* Confirm pass */}
+        <View style={styles.inputConfirmPassword}>
+          <TextInput  
+            secureTextEntry
+            style={styles.inputConfirmTextPassword}
+            placeholder="Confirm your password" 
+            placeholderTextColor='rgba(255, 255, 255, 0.4)'
+            onChangeText={confirmedPass => passHandler(confirmedPass)}/>
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.loginTouch}>
+          <Text style={styles.loginText}>I have got my profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.registerBtn}
+          onPress={() => registerHandler()}>
+          <Text style={styles.registerText}>Registration</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.supportBtn}>
+          <Image
+            source={require('../assets/icons/IconSupport1.png')}  
+          />
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
@@ -170,9 +207,13 @@ export function Register({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000000'
+  },
+  scrollViewContainer: {
+    height: '100%',
     backgroundColor: '#000000',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   logo: {
     position: 'absolute',
@@ -422,9 +463,48 @@ const styles = StyleSheet.create({
   },
   supportBtn: {
     position: "absolute",
-    top: 780,
+    top: 765,
     width: 30,
     height: 30,
     left: 330
+  },
+  okButton: {
+    position: "absolute",
+    width: '25%',
+    height: 40,
+    top: 70,
+    backgroundColor:"rgba(204, 0, 255, 1)",
+    borderRadius: 10
+  },
+  ok: {
+    position: "absolute",
+    top: 3,
+    left: '32%',
+    width: 141,
+    color:"white",
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 18,
+    lineHeight: 33
+  },
+  errorText: {
+    position: "absolute",
+    textAlign: 'center',
+    top: 18,
+    width: '90%',
+    color: '#000000',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 18,
+    lineHeight: 33
+  },
+  modalView: {
+    width: '90%',
+    height: 120,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 35,
+    alignItems: "center",
+    alignSelf: "center"
   }
 });

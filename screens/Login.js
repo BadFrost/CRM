@@ -1,32 +1,63 @@
 import * as React from 'react';
 import { useState } from 'react'
-import { View, Text, TouchableOpacity, TextInput, Image, StyleSheet, AsyncStorage } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image, StyleSheet, Modal } from 'react-native';
+import Constants from "expo-constants";
+import axios from 'axios';
 
 export function Login({ navigation }) {
+  const { manifest } = Constants;
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [errText, setErrText] = useState('');
 
   let loginHandler = async () => {
     if (email !== '' && pass !== '') {
-      try {
-        const value = await AsyncStorage.getItem(email);
-        if (value !== null) {
-          let valueObj = JSON.parse(value);
-          if (valueObj.email === email && valueObj.pass === pass) {
-            navigation.navigate('Dashboard')
-          }
-          else {
-            
-          }
+      const uri = `${manifest.debuggerHost.split(':').shift()}`;
+      axios.post(`http://${uri}:8080/login`, {
+        email: email,
+        pass: pass
+      })
+      .then(async (res) => {
+        if (res.data === 'OK') {
+          navigation.navigate('Dashboard')
         }
-      } catch (error) {
-        console.log(error)
-      }
+        else if (res.data === 'User not found!') {
+          setErrText(res.data)
+          setModalVisible(true)
+        }
+        else if (res.data === 'Email or password is incorrect!') {
+          setErrText(res.data)
+          setModalVisible(true)
+        }
+      })
+      .catch(async (err) => {
+        console.log(err)
+      });
     }
   };
 
   return (
     <View style={styles.container}>
+      <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        setModalVisible(!modalVisible);
+      }}>
+        <View style={styles.modalView}>
+          <Text style={styles.errorText}>{errText}</Text>
+          <TouchableOpacity
+            style={styles.okButton}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <Text style={styles.ok}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
       <Image
         style={styles.logo}
         source={require('../assets/icons/Logo.png')}  
@@ -171,5 +202,44 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     color: 'rgba(255, 255, 255, 0.7)'
+  },
+  okButton: {
+    position: "absolute",
+    width: '25%',
+    height: 40,
+    top: 70,
+    backgroundColor: "rgba(204, 0, 255, 1)",
+    borderRadius: 10
+  },
+  ok: {
+    position: "absolute",
+    top: 3,
+    left: '32%',
+    width: 141,
+    color:"white",
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 18,
+    lineHeight: 33
+  },
+  errorText: {
+    position: "absolute",
+    textAlign: 'center',
+    top: 18,
+    width: '90%',
+    color: '#000000',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 18,
+    lineHeight: 33
+  },
+  modalView: {
+    width: '90%',
+    height: 120,
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    borderRadius: 10,
+    padding: 35,
+    alignItems: "center",
+    alignSelf: "center"
   }
 });
