@@ -192,11 +192,12 @@ const styles = StyleSheet.create({
   },
   signUp: {
     position: "absolute",
-    width: 263,
+    width: '90%',
     height: 16,
     top: 400
   },
   signUpText: {
+    textAlign: 'center',
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 12,

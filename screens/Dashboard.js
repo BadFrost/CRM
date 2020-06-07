@@ -239,13 +239,13 @@ export function Dashboard({ navigation }) {
                 <TouchableOpacity style={styles.dashboard}>
                     <Image source={require('../assets/icons/dashboardActive.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.statistics}>
+                <TouchableOpacity onPress={() => navigation.navigate('Statistics')} style={styles.statistics}>
                     <Image source={require('../assets/icons/statisticsInactive.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.messages}>
+                <TouchableOpacity onPress={() => navigation.navigate('Messages')} style={styles.messages}>
                     <Image source={require('../assets/icons/messagesInactive.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.results}>
+                <TouchableOpacity onPress={() => navigation.navigate('Results')} style={styles.results}>
                     <Image source={require('../assets/icons/resultsInactive.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.profile}>
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000'
     },
     scrollViewContainer: {
-        height: '195%',
+        height: '205%',
         backgroundColor: '#000000',
         alignItems: 'center',
         justifyContent: 'center'
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     menuContainer: {
         position: 'absolute',
         backgroundColor: '#191919',
-        top: 771,
+        top: '92%',
         height: 80,
         width: '100%'
     },

@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000'
   },
   scrollViewContainer: {
-    height: '100%',
+    height: '103%',
     backgroundColor: '#000000',
     alignItems: 'center',
     justifyContent: 'center'
@@ -431,11 +431,12 @@ const styles = StyleSheet.create({
   },
   loginTouch: {
     position: "absolute",
-    width: 109,
+    width: '90%',
     height: 16,
     top: 733
   },
   loginText: {
+    textAlign: 'center',
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 12,

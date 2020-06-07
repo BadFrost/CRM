@@ -168,7 +168,7 @@ export function NewTask({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#000000',
-        height: '115%',
+        height: '120%',
         alignItems: 'center'
     },
     back: {

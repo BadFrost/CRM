@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { View, ScrollView, Text, TouchableOpacity, TextInput, Image, StyleSheet, Modal, StatusBar } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity, Image, StyleSheet, StatusBar } from 'react-native';
 import Constants from "expo-constants";
 import axios from 'axios';
 
 export const Profile = ({ navigation }) => {
     const { manifest } = Constants;
+    const [isExecuted, setExecute] = React.useState(false);
     const [user, setUser] = React.useState({
         fname: '',
         lname: '',
@@ -14,6 +15,7 @@ export const Profile = ({ navigation }) => {
         company: ''
     });
     let userInfo = () => {
+        setExecute(true);
         const uri = `${manifest.debuggerHost.split(':').shift()}`;
         axios.get(`http://${uri}:8080/getMe`)
         .then(async (res) => {
@@ -36,14 +38,22 @@ export const Profile = ({ navigation }) => {
             console.log(err)
         });
     };
-    userInfo();
+    if (!isExecuted) {
+        userInfo();
+    }
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.logOut}>
                     <Image source={require('../assets/icons/logOut.png')} />
                 </TouchableOpacity>
+                <Image style={styles.avatar} source={require('../assets/icons/avatarDragon.png')}></Image>
                 <Text style={styles.name}>{user.fname} {user.lname}</Text>
+                <Text style={styles.contactLabel}>Contact</Text>
+                <View style={styles.contactBlock}>
+                    <Text style={styles.emailText}>E-mail:      {user.email}</Text>
+                    <Text style={styles.phoneText}>Phone:      {user.phone}</Text>
+                </View>
             </ScrollView>
             <StatusBar barStyle = "light-content" hidden = {false} backgroundColor = "#191919" translucent = {true}/>
             <View style={styles.header}>
@@ -53,13 +63,13 @@ export const Profile = ({ navigation }) => {
                 <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.dashboard}>
                     <Image source={require('../assets/icons/dashboardInactive.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.statistics}>
+                <TouchableOpacity onPress={() => navigation.navigate('Statistics')} style={styles.statistics}>
                     <Image source={require('../assets/icons/statisticsInactive.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.messages}>
+                <TouchableOpacity onPress={() => navigation.navigate('Messages')} style={styles.messages}>
                     <Image source={require('../assets/icons/messagesInactive.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.results}>
+                <TouchableOpacity onPress={() => navigation.navigate('Results')} style={styles.results}>
                     <Image source={require('../assets/icons/resultsInactive.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.profile}>
@@ -76,7 +86,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000'
     },
     scrollViewContainer: {
-        height: '195%',
+        height: '100%',
         backgroundColor: '#000000',
         alignItems: 'center',
         justifyContent: 'center'
@@ -108,7 +118,7 @@ const styles = StyleSheet.create({
     menuContainer: {
         position: 'absolute',
         backgroundColor: '#191919',
-        top: 771,
+        top: '92%',
         height: 80,
         width: '100%'
     },
@@ -140,13 +150,61 @@ const styles = StyleSheet.create({
     name: {
         position: "absolute",
         top: 105,
-        left: '10%',
+        left: '30%',
         width: '70%',
         height: 33,
         fontStyle: 'normal',
         fontWeight: '600',
         fontSize: 24,
         lineHeight: 33,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    avatar: {
+        position: 'absolute',
+        left: '5%',
+        top: 114,
+        width: 70,
+        height: 70
+    },
+    contactLabel: {
+        position: "absolute",
+        top: 208,
+        left: '10%',
+        height: 25,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 18,
+        lineHeight: 25,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    contactBlock: {
+        position: 'absolute',
+        width: '95%',
+        height: 104,
+        top: 253,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        borderRadius: 20
+    },
+    emailText: {
+        position: "absolute",
+        top: 20,
+        left: '10%',
+        height: 22,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 22,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    phoneText: {
+        position: "absolute",
+        top: 62,
+        left: '10%',
+        height: 22,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 22,
         color: 'rgba(255, 255, 255, 0.7)'
     }
 });
