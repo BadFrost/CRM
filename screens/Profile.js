@@ -54,10 +54,21 @@ export const Profile = ({ navigation }) => {
                     <Text style={styles.emailText}>E-mail:      {user.email}</Text>
                     <Text style={styles.phoneText}>Phone:      {user.phone}</Text>
                 </View>
+                <Text style={styles.informationLabel}>Information</Text>
+                <View style={styles.informationBlock}>
+                    <Text style={styles.professionText}>Profession:      -</Text>
+                    <Text style={styles.countryText}>Country:            {user.country}</Text>
+                    <Text style={styles.cityText}>City:                   -</Text>
+                    <Text style={styles.ageText}>Age:                   -</Text>
+                    <Text style={styles.genderText}>Gender:             -</Text>
+                </View>
             </ScrollView>
             <StatusBar barStyle = "light-content" hidden = {false} backgroundColor = "#191919" translucent = {true}/>
             <View style={styles.header}>
                 <Text style={styles.title}>Profile</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('EditProfile')} style={styles.editProfile}>
+                    <Image source={require('../assets/icons/editProfile.png')} />
+                </TouchableOpacity>
             </View>
             <View style={styles.menuContainer}>
                 <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.dashboard}>
@@ -100,15 +111,20 @@ const styles = StyleSheet.create({
     },
     title: {
         position: 'absolute',
+        left: 175,
         top: 53,
         width: 85,
         height: 22,
-        left: '45%',
         fontStyle: 'normal',
         fontWeight: '600',
         fontSize: 16,
         lineHeight: 22,
         color: '#FFFFFF'
+    },
+    editProfile: {
+        position: 'absolute',
+        right: 18,
+        top: 39
     },
     logOut: {
         position: 'absolute',
@@ -199,6 +215,80 @@ const styles = StyleSheet.create({
     phoneText: {
         position: "absolute",
         top: 62,
+        left: '10%',
+        height: 22,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 22,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    informationLabel: {
+        position: "absolute",
+        top: 387,
+        left: '10%',
+        height: 25,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 18,
+        lineHeight: 25,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    informationBlock: {
+        position: 'absolute',
+        width: '95%',
+        height: 230,
+        top: 432,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        borderRadius: 20
+    },
+    professionText: {
+        position: "absolute",
+        top: 20,
+        left: '10%',
+        height: 22,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 22,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    countryText: {
+        position: "absolute",
+        top: 62,
+        left: '10%',
+        height: 22,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 22,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    cityText: {
+        position: "absolute",
+        top: 104,
+        left: '10%',
+        height: 22,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 22,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    ageText: {
+        position: "absolute",
+        top: 146,
+        left: '10%',
+        height: 22,
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 22,
+        color: 'rgba(255, 255, 255, 0.7)'
+    },
+    genderText: {
+        position: "absolute",
+        top: 188,
         left: '10%',
         height: 22,
         fontStyle: 'normal',

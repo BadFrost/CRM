@@ -10,6 +10,7 @@ import { Profile } from './screens/Profile';
 import { Statistics } from './screens/Statistics';
 import { Messages } from './screens/Messages';
 import { Results } from './screens/Results';
+import { EditProfile } from './screens/EditProfile';
 
 const Stack = createStackNavigator();
 
@@ -21,10 +22,11 @@ function MyStack() {
       <Stack.Screen name="Dashboard" component={Dashboard} />
       <Stack.Screen name="EditTasks" component={EditTasks} />
       <Stack.Screen name="NewTask" component={NewTask} />
-      <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Statistics" component={Statistics} />
       <Stack.Screen name="Messages" component={Messages} />
       <Stack.Screen name="Results" component={Results} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );
 }
