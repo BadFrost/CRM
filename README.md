@@ -12,8 +12,8 @@ npm install -g yarn
 npm install --global expo-cli
 ```
 Скачать Expo CLI для Android и iOS:
-    - 🤖 [Android](https://play.google.com/store/apps/details?id=host.exp.exponent)
-    - 🍎 [iOS](https://apps.apple.com/ru/app/expo-client/id982107779)
+🤖 [Android](https://play.google.com/store/apps/details?id=host.exp.exponent)
+🍎 [iOS](https://apps.apple.com/ru/app/expo-client/id982107779)
 
 ### Начало
 Клонирование репозитория:
@@ -28,6 +28,9 @@ yarn install
 ```sh
 yarn start
 ```
+
+### Обязательно!
+[CRMDarkSide](https://github.com/BadFrost/CRMDarkSide)
 
 License
 ----
